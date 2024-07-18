@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     private lazy var headerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "contrastColor")
         view.layer.cornerRadius = 20
         return view
     }()
@@ -35,27 +35,100 @@ class ViewController: UIViewController {
         return label
     }()
     
+    private lazy var temperatureLabel: UILabel = {
+        let label = UILabel(frame: .zero)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 70, weight: .bold)
+        label.text = "23ºC"
+        label.textAlignment = .left
+        label.textColor = UIColor(named: "primaryColor")
+        return label
+    }()
+    
+    private lazy var weatherIcon: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "sunIcon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    private lazy var humidityLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
+        label.text = "Umidade"
+        label.textColor = UIColor(named: "contrastColor")
+        return label
+    }()
+    
+    private lazy var humidityValueLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
+        label.text = "1000mm"
+        label.textColor = UIColor(named: "contrastColor")
+        return label
+    }()
+    
+    private lazy var humidityStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [
+            humidityLabel, humidityValueLabel
+        ])
+        stackView.axis = .horizontal
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private lazy var windLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
+        label.text = "Vento"
+        label.textColor = UIColor(named: "contrastColor")
+        return label
+    }()
+    
+    private lazy var windValueLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
+        label.text = "10km/h"
+        label.textColor = UIColor(named: "contrastColor")
+        return label
+    }()
+    
+    private lazy var windStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [
+        windLabel, windValueLabel
+        ])
+        stackView.axis = .horizontal
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private lazy var statsStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [
+        humidityStackView, windStackView
+        ])
+        stackView.axis = .vertical
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.spacing = 3
+        stackView.backgroundColor = UIColor(named: "softGray")
+        stackView.layer.cornerRadius = 10
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 12, leading: 24, bottom: 12, trailing: 24
+        )
+        return stackView
+    }()
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupView()
     
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
     }
     
     private func setupView() {
@@ -69,8 +142,13 @@ class ViewController: UIViewController {
     private func setHierarchy() {
         view.addSubview(backgroundView)
         view.addSubview(headerView)
+        view.addSubview(statsStackView)
         
         headerView.addSubview(cityLabel)
+        headerView.addSubview(temperatureLabel)
+        headerView.addSubview(weatherIcon)
+        
+        
     }
     
     private func setConstraints() {
@@ -92,6 +170,20 @@ class ViewController: UIViewController {
             cityLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 15),
             cityLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 15),
             cityLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -15),
+            cityLabel.heightAnchor.constraint(equalToConstant: 20),
+            temperatureLabel.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 21),
+            temperatureLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 26),
+            weatherIcon.heightAnchor.constraint(equalToConstant: 86),
+            weatherIcon.widthAnchor.constraint(equalToConstant: 86),
+            weatherIcon.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -26),
+            weatherIcon.centerYAnchor.constraint(equalTo: temperatureLabel.centerYAnchor),
+            weatherIcon.leadingAnchor.constraint(equalTo: temperatureLabel.trailingAnchor, constant: 15),
+        ])
+        
+        NSLayoutConstraint.activate([
+            statsStackView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 24),
+            statsStackView.widthAnchor.constraint(equalToConstant: 206),
+            statsStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
     }
 
